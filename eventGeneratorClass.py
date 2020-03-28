@@ -7,7 +7,11 @@ import pandas as pd
 import collections
 import random
 
-class EventGeneratorClass(object):
+class EventGeneratorClass:
+  class ClusterCenter:
+        def __init__(self, x,y ):
+            self.x = x
+            self.y = y
 
 # =============================================================================
 # __init__() functions as the class constructor
@@ -15,8 +19,12 @@ class EventGeneratorClass(object):
   def __init__(self, initialNbClusters, canvasWidth, canvasHeight, marginX, marginY):
     self.width = canvasWidth - marginX
     self.height = canvasHeight - marginY
+    self.clusterCenterList = []
     self._initClusterCenterList_(initialNbClusters)
 
+    #for i in range(len(self.clusterCenterList)): 
+      #print(self.clusterCenterList[i].x)
+      #print(self.clusterCenterList[i].y)
 
   #=============================================================================
   # Init List of center cluster
@@ -75,8 +83,9 @@ class EventGeneratorClass(object):
   # Add randomly a cluster center
   #=============================================================================
   def _addRandomClusterCenter_(self):
-    clusterCenter = (random.randrange(0, self.width), random.randrange(0, self.height))
+    clusterCenter = EventGeneratorClass.ClusterCenter(random.randrange(0, self.width), random.randrange(0, self.height))
     self.clusterCenterList.append(clusterCenter)
+
 
   #=============================================================================
   # Create Event at ramdom position

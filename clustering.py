@@ -1,20 +1,20 @@
 # Module imports
 
 # Third party imports
-import HDBSCAN
+import hdbscan
 import time
 
 
-def cluster(inputDataFrame):
+def detectCluster(inputDataFrame):
     # Compute DBSCAN
     #hdb_t1 = time.time()
-    clusterer =  HDBSCAN.HDBSCAN(min_cluster_size=3, allow_single_cluster=False, prediction_data=True).fit(inputDataFrame)
+    clusterer =  hdbscan.HDBSCAN(min_cluster_size=3, allow_single_cluster=False, prediction_data=True).fit(inputDataFrame)
     #hdb_elapsed_time = time.time() - hdb_t1
     #print('Elapsed time to cluster: %.4f s' % hdb_elapsed_time)
     return clusterer 
 
 def predict(hdb, test_points):
-	test_labels, strengths = HDBSCAN.approximate_predict(hdb, test_points)
+	test_labels, strengths = hdbscan.approximate_predict(hdb, test_points)
 	return test_labels, strengths
 
 def printHDBSCAN(hdb, inputDataFrame, index_feature):

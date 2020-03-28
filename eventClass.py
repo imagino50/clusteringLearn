@@ -6,7 +6,7 @@ import pandas as pd
 import collections
 
 
-class EventClass(object):
+class EventClass:
 # =============================================================================
 # __init__() functions as the class constructor
 # =============================================================================
@@ -14,6 +14,7 @@ class EventClass(object):
         self.x = center_x
         self.y = center_y
         self.intensity = centerIntensity
+        self.propagatedIntensity = 0
         self.radius = 0
         self.clusterId = -1
 
@@ -27,6 +28,14 @@ class EventClass(object):
         # increase the radius
         self.radius += incRadius
   
+  
+# =============================================================================
+# set Event propagatedIntensity
+# =============================================================================
+    def setPropagatedIntensity(self, propagatedIntensity):
+        self.propagatedIntensity = propagatedIntensity
+
+
 # =============================================================================
 # set Event's cluster
 # =============================================================================
