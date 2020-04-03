@@ -1,9 +1,6 @@
 # Module imports
 
 # Third party imports
-import numpy as np
-import pandas as pd
-import collections
 
 
 class EventClass:
@@ -18,8 +15,9 @@ class EventClass:
         self.radius = 0
         self.clusterId = -1
 
+
 # =============================================================================
-# update Event shape
+# Update Event shape
 # =============================================================================
     def updateShape(self, incRadius, incIntensity):
         # decrease the intensity

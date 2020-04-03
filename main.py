@@ -4,13 +4,9 @@ import eventManagerClass as EventManager
 import eventGeneratorClass as EventGenerator
 
 # Third party imports
-import numpy as np
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
-import seaborn as sns
 
-# Fixing random state for reproducibility
-#np.random.seed(19680801)
 
 # Settings
 generationMode = "Cluster" #"Random" 
@@ -40,7 +36,6 @@ ax = fig.add_axes([0, 0, 1, 1], frameon=False)
 ax.set_xlim(0, canvasWidth), ax.set_xticks([])
 ax.set_ylim(0, canvasHeight), ax.set_yticks([])
 
-# Create rain data
 evtMng = EventManager.EventManagerClass()
 evtGen = EventGenerator.EventGeneratorClass(initialNbClusters, canvasWidth, canvasHeight, marginX, marginY)
 

@@ -3,9 +3,10 @@ import eventClass as Event
 
 # Third party imports
 import numpy as np
-import pandas as pd
-import collections
 import random
+
+# Fixing random state for reproducibility
+#np.random.seed(19680801)
 
 class EventGeneratorClass:
   class ClusterCenter:
@@ -116,6 +117,7 @@ class EventGeneratorClass:
       round(np.random.normal(cluster.x, max_x_stdev)), 
       centerIntensity
     )
+
   
   #=============================================================================
   # Update a center of a cluster choosed randomly

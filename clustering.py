@@ -3,7 +3,7 @@
 # Third party imports
 import hdbscan
 import pandas as pd
-import time
+#import time
 
 
 def detectCluster(eventList, min_cluster_size):

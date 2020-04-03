@@ -4,10 +4,7 @@ import clustering as Clustering
 
 # Third party imports
 import numpy as np
-import pandas as pd
-import collections
-import scipy.spatial as spatial
-import collections
+#import scipy.spatial as spatial
 import seaborn as sns
 
 
