@@ -4,8 +4,9 @@ import clustering as Clustering
 
 # Third party imports
 import numpy as np
-#import scipy.spatial as spatial
 import seaborn as sns
+#import scipy.spatial as spatial
+
 
 
 class EventManagerClass:
@@ -25,11 +26,13 @@ class EventManagerClass:
         self.b =  [x[2] for x in color_palette]
         #print(color_palette)
 
+
   # =============================================================================*/
   # Add Event
   # =============================================================================*/
     def addEvent(self, event):
         self.eventList.append(event)
+
 
   # =============================================================================*/
   # Add new Event at position (x,y)
@@ -39,6 +42,7 @@ class EventManagerClass:
             Event.EventClass(round(x), round(y), centerIntensity)
         )
 
+
   # =============================================================================
   # Update Events shape
   # =============================================================================
@@ -46,6 +50,7 @@ class EventManagerClass:
         # loop over each event to update it
         for event in self.eventList:
             event.updateShape(incRadius, incIntensity)
+
 
   # =============================================================================
   # Set Events propagatedIntensity
@@ -60,6 +65,7 @@ class EventManagerClass:
     #        propagatedIntensity =
     #        event.setPropagatedIntensity(propagatedIntensity)
 
+
   # =============================================================================
   # Clustering Events
   # =============================================================================
@@ -67,16 +73,16 @@ class EventManagerClass:
       if (len(self.eventList) > min_cluster_size):
         clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
 
-        matchingDict = {}
+        matchingClustersDict = {}
         if (self.clusterer_previous is not None) and (clusterer.labels_[clusterer.labels_ != -1].size > 0 ):
-          matchingDict = self.clusterCorrelation(clusterer.labels_)
+          matchingClustersDict = self.correlateClusters(clusterer.labels_)
 
-        if(len(matchingDict) > 0):
+        if(len(matchingClustersDict) > 0):
           for event, label in zip(self.eventList, clusterer.labels_):
             if(label == -1):
               event.setCluster(-1)
             else:
-              clusterId = matchingDict[label]
+              clusterId = matchingClustersDict[label]
               event.setCluster(clusterId)
         elif len(clusterer.labels_ > 0):
           for event, label in zip(self.eventList, clusterer.labels_):
@@ -85,10 +91,11 @@ class EventManagerClass:
         self.clusterer_previous = clusterer
         self.eventList_previous = self.eventList
 
+
   # =============================================================================
   # Clustering Correlation between previous and current clusters
   # =============================================================================
-    def clusterCorrelation(self, labels):
+    def correlateClusters(self, labels):
       matchingDict = {}
       for cur_idx in range(len(self.eventList)):
         cur_clusterId = labels[cur_idx]
@@ -103,6 +110,7 @@ class EventManagerClass:
                   #print(u"FOUND! cur_clusterId:", cur_clusterId , '  prev_clusterId:', prev_clusterId)
                   break
 
+      # Current cLusters that ccannot be match with previous clusters
       clusterIdMax = np.amax(labels) + 1
       for cluster_id in range(clusterIdMax):
         if cluster_id not in matchingDict:
@@ -121,17 +129,20 @@ class EventManagerClass:
         self.eventList=[
             item for item in self.eventList if item.intensity > intensityMin]
 
+
   # =============================================================================*/
   # Remove all Events
   # =============================================================================*/
     def removeAllEvents(self):
         self.eventList.clear()
 
+
   # =============================================================================*/
   # Return EventList
   # =============================================================================*/
     def getEventList(self):
         return self.eventList
+
 
   # =============================================================================*/
   # Return EventList
@@ -149,6 +160,7 @@ class EventManagerClass:
         colorList = tuple(zip(r1, g1, b1, a))
 
         return offsetList, sizeList, colorList
+
 
   # =============================================================================*/
   # Print EventList
