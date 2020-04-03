@@ -96,7 +96,7 @@ class EventManagerClass:
   # Clustering Correlation between previous and current clusters
   # =============================================================================
     def correlateClusters(self, labels):
-      matchingDict = {}
+      matchingClustersDict = {}
       for cur_idx in range(len(self.eventList)):
         cur_clusterId = labels[cur_idx]
         if cur_clusterId != -1:
@@ -105,21 +105,21 @@ class EventManagerClass:
               if(self.eventList[cur_idx].x == self.eventList_previous[prev_idx].x and
               self.eventList[cur_idx].y == self.eventList_previous[prev_idx].y and
               prev_clusterId != -1):
-                if prev_clusterId not in matchingDict.values():
-                  matchingDict[cur_clusterId] = prev_clusterId
+                if prev_clusterId not in matchingClustersDict.values():
+                  matchingClustersDict[cur_clusterId] = prev_clusterId
                   #print(u"FOUND! cur_clusterId:", cur_clusterId , '  prev_clusterId:', prev_clusterId)
                   break
 
       # Current cLusters that ccannot be match with previous clusters
       clusterIdMax = np.amax(labels) + 1
       for cluster_id in range(clusterIdMax):
-        if cluster_id not in matchingDict:
+        if cluster_id not in matchingClustersDict:
           i = 0
-          while i in matchingDict.values():
+          while i in matchingClustersDict.values():
             i = i + 1
-          matchingDict[cluster_id] = i
+          matchingClustersDict[cluster_id] = i
 
-      return matchingDict
+      return matchingClustersDict
 
 
   # =============================================================================
