@@ -43,7 +43,6 @@ evtGen = EventGenerator.EventGeneratorClass(initialNbClusters, canvasWidth, canv
 # as the raindrops develop.
 scat = ax.scatter(x=[], y=[], s=[], lw=0.5, edgecolors=(0,0,0,1), facecolors='none')
 
-# https://www.stat.berkeley.edu/~nelle/teaching/2017-visualization/README.html#contour-plots
 def update(frame_number):
     event = evtGen.createEvent(
         generationMode,
@@ -62,7 +61,7 @@ def update(frame_number):
 
     offsetList, sizeList, colorList = evtMng.getDataToScatter(centerIntensity, intensityMin)
 
-    # Update the scatter collection, with the new colors, sizes and positions.
+    # Update the scatter collection, with the new positions, sizes, colors.
     scat.set_offsets(offsetList)
     scat.set_sizes(sizeList)
     scat.set_edgecolors(colorList)

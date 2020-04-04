@@ -78,15 +78,18 @@ class EventManagerClass:
           matchingClustersDict = self.correlateClusters(clusterer.labels_)
 
         if(len(matchingClustersDict) > 0):
-          for event, label in zip(self.eventList, clusterer.labels_):
+          for event, label, probabilities in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
+            event.setClustererProbabilities(probabilities)
             if(label == -1):
               event.setCluster(-1)
             else:
               clusterId = matchingClustersDict[label]
               event.setCluster(clusterId)
+             
         elif len(clusterer.labels_ > 0):
-          for event, label in zip(self.eventList, clusterer.labels_):
+          for event, label, probabilities in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
             event.setCluster(label)
+            event.setClustererProbabilities(probabilities)
 
         self.clusterer_previous = clusterer
         self.eventList_previous = self.eventList
@@ -111,7 +114,7 @@ class EventManagerClass:
                   break
 
       # Current cLusters that ccannot be match with previous clusters
-      clusterIdMax = np.amax(labels) + 1
+      clusterIdMax = np.amax(labels) + 1 #clusterer.labels_.max()
       for cluster_id in range(clusterIdMax):
         if cluster_id not in matchingClustersDict:
           i = 0
@@ -157,9 +160,10 @@ class EventManagerClass:
         g1 = [self.g[event.clusterId] if event.clusterId >= 0 else 0.0 for event in self.eventList]
         b1 = [self.b[event.clusterId] if event.clusterId >= 0 else 0.0 for event in self.eventList]
         a = [(event.intensity - intensityMin)/(centerIntensity - intensityMin) for event in self.eventList]
-        colorList = tuple(zip(r1, g1, b1, a))
+        cluster_colors = tuple(zip(r1, g1, b1, a))
 
-        return offsetList, sizeList, colorList
+        #cluster_member_colors = [sns.desaturate(x, p) for x, p in zip(cluster_colors, clusterer.probabilities_)]
+        return offsetList, sizeList, cluster_colors
 
 
   # =============================================================================*/
