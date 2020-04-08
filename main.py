@@ -38,7 +38,7 @@ spacing = 0.02
 
 
 # Create new Figure and Axes which fill it.
-fig = plt.figure(figsize=(5, 5))
+fig = plt.figure(figsize=(8, 8))
 
 ax_scatter = plt.axes([left, bottom, width, height])
 ax_scatter.set_xlim(0, canvasWidth)
