@@ -49,27 +49,13 @@ class EventManagerClass:
     def updateEventsShape(self, incRadius, incIntensity):
         # loop over each event to update it
         for event in self.eventList:
-            event.updateShape(incRadius, incIntensity)
-
-
-  # =============================================================================
-  # Set Events propagatedIntensity
-  # =============================================================================
-    # def setEventsPropagatedIntensity(self, distance):
-    # https://stackoverflow.com/questions/32424604/find-all-nearest-neighbors-within-a-specific-distance
-    #    point_tree = spatial.cKDTree(self.eventList)
-    #    # loop over each event to calulate each propagatedIntensity
-    #    for event in self.eventList:
-    #        # This finds the index of all points within distance "distance" of [event.x, event.y].
-    #        point_tree.query_ball_point([event.x, event.y], distance))
-    #        propagatedIntensity =
-    #        event.setPropagatedIntensity(propagatedIntensity)
+          event.updateShape(incRadius, incIntensity)
 
 
   # =============================================================================
   # Clustering Events
   # =============================================================================
-    def clusterEvents(self, min_cluster_size):
+    def clusterEvents(self, min_cluster_size, min_proba_cluster):
       if (len(self.eventList) > min_cluster_size):
         clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
 
@@ -78,18 +64,22 @@ class EventManagerClass:
           matchingClustersDict = self.correlateClusters(clusterer.labels_)
 
         if(len(matchingClustersDict) > 0):
-          for event, label, probabilities in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
-            event.setClustererProbabilities(probabilities)
-            if(label == -1):
+          for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
+            event.setClustererProbability(probability)
+            if (label == -1) or (probability < min_proba_cluster):
               event.setCluster(-1)
             else:
               clusterId = matchingClustersDict[label]
               event.setCluster(clusterId)
-             
+              event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
         elif len(clusterer.labels_ > 0):
-          for event, label, probabilities in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
-            event.setCluster(label)
-            event.setClustererProbabilities(probabilities)
+          for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
+            event.setClustererProbability(probability)
+            if (label == -1) or (probability < min_proba_cluster):
+              event.setCluster(-1)
+            else:
+              event.setCluster(label)
+              event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
 
         self.clusterer_previous = clusterer
         self.eventList_previous = self.eventList
@@ -105,9 +95,11 @@ class EventManagerClass:
         if cur_clusterId != -1:
            for prev_idx in range(len(self.eventList_previous)):
               prev_clusterId = self.eventList_previous[prev_idx].clusterId
-              if(self.eventList[cur_idx].x == self.eventList_previous[prev_idx].x and
+              if(prev_clusterId != -1 and 
+              self.eventList[cur_idx].x == self.eventList_previous[prev_idx].x and
               self.eventList[cur_idx].y == self.eventList_previous[prev_idx].y and
-              prev_clusterId != -1):
+              self.eventList_previous[prev_idx].clusterExemplar and
+              self.eventList[cur_idx].clusterExemplar):
                 if prev_clusterId not in matchingClustersDict.values():
                   matchingClustersDict[cur_clusterId] = prev_clusterId
                   #print(u"FOUND! cur_clusterId:", cur_clusterId , '  prev_clusterId:', prev_clusterId)
@@ -123,6 +115,14 @@ class EventManagerClass:
           matchingClustersDict[cluster_id] = i
 
       return matchingClustersDict
+
+
+  # =============================================================================
+  # Return true if the Event coordinates match one of the array of coordinates
+  # =============================================================================
+    def isCoordinatesMatch(self, event, exemplars):
+      coordinates = np.array([event.x, event.y])
+      return any(np.array_equal(exemplar, coordinates) for exemplar in exemplars)
 
 
   # =============================================================================

@@ -130,14 +130,14 @@ class EventGeneratorClass:
         self.clusterCenterList[clusterId].x,
         max_centerX_stdev
       ))
-      if (newPosX > 0) and (newPosX < self.width):
+      if (newPosX > self.marginX) and (newPosX < self.width):
         self.clusterCenterList[clusterId].x = newPosX
       
       newPosY = round(np.random.normal(
         self.clusterCenterList[clusterId].y,
         max_centerY_stdev
       ))
-      if (newPosY > 0) and (newPosY < self.height):
+      if (newPosY > self.marginY) and (newPosY < self.height):
         self.clusterCenterList[clusterId].y = newPosY
        
 

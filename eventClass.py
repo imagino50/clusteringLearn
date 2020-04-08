@@ -11,7 +11,8 @@ class EventClass:
         self.x = center_x
         self.y = center_y
         self.intensity = centerIntensity
-        self.clustererProbabilities = 0
+        self.clustererProbability = 0
+        self.clusterExemplar = False
         self.radius = 0
         self.clusterId = -1
 
@@ -28,10 +29,17 @@ class EventClass:
   
   
 # =============================================================================
-# set Event clustererProbabilities
+# set Event clustererProbability
 # =============================================================================
-    def setClustererProbabilities(self, clustererProbabilities):
-        self.clustererProbabilities = clustererProbabilities
+    def setClustererProbability(self, clustererProbability):
+        self.clustererProbability = clustererProbability
+
+
+# =============================================================================
+# set Event clusterExamplar
+# =============================================================================
+    def setClusterExemplar(self, clusterExemplar):
+        self.clusterExemplar = clusterExemplar
 
 
 # =============================================================================
