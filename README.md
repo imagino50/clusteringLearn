@@ -29,6 +29,7 @@ python main.py
 - numpy 
 - pandas
 - collections
+- hdbscan
 - seaborn
 - matplotlib
 
