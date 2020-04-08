@@ -19,7 +19,7 @@ The classification of these 'events' is done accordingly to these 3 conditions :
 git clone https://github.com/imagino50/clusteringLearn.git
 ```
 ```
-npm install
+pip install -r requirements.txt
 ```
 ```
 python main.py
