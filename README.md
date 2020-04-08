@@ -2,12 +2,11 @@
 
 ## Project purpose  
 Detect 'density-based clustering' of a continuous (infinite) stream of 'Events'.  
-'Event' attributes : posX, posY, intensity, radius, clusterId.
+'Event' attributes : posX, posY, intensity, radius, clusterId, clustererProbability, clusterExemplar
 
-The classification of these 'events' is done accordingly to these 4 conditions :
+The classification of these 'events' is done accordingly to these 3 conditions :
 - Events are sent one by one to the stream input
 - Each event intensity decreases while its radius increases over time.  
-- To emphase the 'density-based clustering', events **accumulate theirs intensities when they are close enough**.
 - Events with weak intensity are filtered
 
 ## Steps Process  
