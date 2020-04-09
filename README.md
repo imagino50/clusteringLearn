@@ -1,5 +1,7 @@
 # Data stream 'Density-based Clustering' in real time   
 
+![alt text](https://github.com/imagino50/clusteringLearn/blob/master/Figure.png   "Home page")
+
 ## Project purpose  
 Detect 'density-based clustering' of a continuous (infinite) stream of 'Events'.  
 'Event' attributes : posX, posY, intensity, radius, clusterId, clustererProbability, clusterExemplar
