@@ -15,8 +15,7 @@ class EventManagerClass:
     # =============================================================================
     def __init__(self):
         self.eventList = []
-        self.eventList_previous = []
-        self.clusterer_previous = None
+        self.fisrtClustering = True
 
         sns.set_color_codes()
         # https://seaborn.pydata.org/tutorial/color_palettes.html
@@ -58,16 +57,20 @@ class EventManagerClass:
     def clusterEvents(self, min_cluster_size, min_proba_cluster):
       if (len(self.eventList) > min_cluster_size):
         clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
+        #self.printEvents()
+        #print(clusterer.labels_)
 
         matchingClustersDict = {}
-        if (self.clusterer_previous is not None) and (clusterer.labels_[clusterer.labels_ != -1].size > 0 ):
-          matchingClustersDict = self.correlateClusters(clusterer.labels_)
+        if (self.fisrtClustering == False) and (clusterer.labels_[clusterer.labels_ != -1].size > 0 ):
+          matchingClustersDict = self.matchClusters(clusterer.labels_, clusterer.exemplars_)
+          #print(matchingClustersDict)
 
-        if(len(matchingClustersDict) > 0):
+        if len(matchingClustersDict) > 0:
           for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
             event.setClustererProbability(probability)
             if (label == -1) or (probability < min_proba_cluster):
               event.setCluster(-1)
+              event.setClusterExemplar(False)
             else:
               clusterId = matchingClustersDict[label]
               event.setCluster(clusterId)
@@ -77,35 +80,28 @@ class EventManagerClass:
             event.setClustererProbability(probability)
             if (label == -1) or (probability < min_proba_cluster):
               event.setCluster(-1)
+              event.setClusterExemplar(False)
             else:
               event.setCluster(label)
               event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
 
-        self.clusterer_previous = clusterer
-        self.eventList_previous = self.eventList
+        self.fisrtClustering = False
 
 
   # =============================================================================
   # Clustering Correlation between previous and current clusters
   # =============================================================================
-    def correlateClusters(self, labels):
+    def matchClusters(self, labels, exemplars):
       matchingClustersDict = {}
-      for cur_idx in range(len(self.eventList)):
-        cur_clusterId = labels[cur_idx]
-        if cur_clusterId != -1:
-           for prev_idx in range(len(self.eventList_previous)):
-              prev_clusterId = self.eventList_previous[prev_idx].clusterId
-              if(prev_clusterId != -1 and 
-              self.eventList[cur_idx].x == self.eventList_previous[prev_idx].x and
-              self.eventList[cur_idx].y == self.eventList_previous[prev_idx].y and
-              self.eventList_previous[prev_idx].clusterExemplar and
-              self.eventList[cur_idx].clusterExemplar):
-                if prev_clusterId not in matchingClustersDict.values():
-                  matchingClustersDict[cur_clusterId] = prev_clusterId
-                  #print(u"FOUND! cur_clusterId:", cur_clusterId , '  prev_clusterId:', prev_clusterId)
-                  break
+      for event, label in zip(self.eventList, labels):
+         isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
+         if (event.clusterId != -1) and event.clusterExemplar and (label != -1) and isStillExemplar:
+          if event.clusterId not in matchingClustersDict.values():
+            matchingClustersDict[label] = event.clusterId
+            #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
+            #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
 
-      # Current cLusters that ccannot be match with previous clusters
+      # Current cLusters that cannot be match with previous clusters
       clusterIdMax = np.amax(labels) + 1 #clusterer.labels_.max()
       for cluster_id in range(clusterIdMax):
         if cluster_id not in matchingClustersDict:
@@ -172,3 +168,4 @@ class EventManagerClass:
     def printEvents(self):
       for item in self.eventList:
         print(u"x:", item.x, '  y:', item.y, "  clusterId: ", item.clusterId)
+
