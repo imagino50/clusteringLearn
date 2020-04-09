@@ -53,7 +53,7 @@ plt.title('Datastream clustering')
 
 #intMin_slider = Slider(slider_IntMin_ax,'Intensity Min',0, 255,valinit=200)
 minProba_slider = Slider(slider_MinProba_ax,'Proba minimum',0, 1, valinit=min_proba_cluster, valstep=0.1)
-incIntensity_slider = Slider(slider_incIntensity_ax,'Intensity decrease Speed',0, 5, valinit=incIntensity, valstep=0.1)
+incIntensity_slider = Slider(slider_incIntensity_ax,'Intensity decrease',0, 5, valinit=incIntensity, valstep=0.1)
 
 
 evtMng = EventManager.EventManagerClass()
