@@ -46,15 +46,15 @@ ax_scatter.set_ylim(0, canvasHeight)
 
 slider_incIntensity_ax = plt.axes([left, 0.05 + spacing, width, 0.02])
 slider_MinProba_ax = plt.axes([left, 0.1 + spacing, width, 0.02])
-#slider_IntDecrease_ax = plt.axes([left, 0.15 + spacing, width, 0.02])
+slider_Noise_ax = plt.axes([left, 0.15 + spacing, width, 0.02])
 
 plt.axes(ax_scatter)
 plt.title('Datastream clustering')
 
 #intMin_slider = Slider(slider_IntMin_ax,'Intensity Min',0, 255,valinit=200)
-minProba_slider = Slider(slider_MinProba_ax,'Proba minimum',0, 1, valinit=min_proba_cluster, valstep=0.1)
+minProba_slider = Slider(slider_MinProba_ax,'Clustering proba min',0, 1, valinit=min_proba_cluster, valstep=0.1)
 incIntensity_slider = Slider(slider_incIntensity_ax,'Intensity decrease',0, 5, valinit=incIntensity, valstep=0.1)
-
+noise_slider = Slider(slider_Noise_ax,'Noise Rate',0, 100, valinit=noiseRate, valstep=1)
 
 evtMng = EventManager.EventManagerClass()
 evtGen = EventGenerator.EventGeneratorClass(initialNbClusters, canvasWidth, canvasHeight, marginX, marginY)
@@ -63,12 +63,19 @@ evtGen = EventGenerator.EventGeneratorClass(initialNbClusters, canvasWidth, canv
 # as the raindrops develop.
 scat = ax_scatter.scatter(x=[], y=[], s=[], lw=0.5, edgecolors=(0,0,0,1), facecolors='none')
 
+def onclick(event):
+    if event.inaxes != ax_scatter: return
+    #print(u"event.x :", event.xdata  , '  event.y:', event.ydata)
+    evtMng.createEvent(event.xdata, event.ydata, centerIntensity)
+
+
+cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
 def update(frame_number):
     event = evtGen.createEvent(
         generationMode,
         nb_clusters,
-        noiseRate,
+        noise_slider.val,
         max_x_stdev,
         max_y_stdev,
         max_centerX_stdev,

@@ -56,7 +56,7 @@ class EventManagerClass:
       if (len(self.eventList) > min_cluster_size):
         clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
         #self.printEvents()
-        #print(clusterer.labels_)
+        #print(clusterer.cluster_persistence_ )
 
         matchingClustersDict = {}
         if (not self.fisrtClustering): 

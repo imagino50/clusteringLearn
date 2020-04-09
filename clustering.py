@@ -17,6 +17,7 @@ def detectCluster(eventList, min_cluster_size):
 
     #hdb_t1 = time.time()
     # https://hdbscan.readthedocs.io/en/latest/basic_hdbscan.html#
+    # https://hdbscan.readthedocs.io/en/latest/api.html
     # Compute DBSCAN
     clusterer =  hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, prediction_data=True).fit(inputDataFrame)
     #hdb_elapsed_time = time.time() - hdb_t1
