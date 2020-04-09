@@ -87,10 +87,10 @@ class EventManagerClass:
       for event, label in zip(self.eventList, labels):
          if (event.clusterId != -1) and (label != -1):
             isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
-            if event.clusterExemplar and isStillExemplar and (event.clusterId not in matchingClustersDict.values()):
+            if (event.clusterId not in matchingClustersDict.values()) and isStillExemplar and event.clusterExemplar:
                 matchingClustersDict[label] = event.clusterId
-            #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
-            #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
+                #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
+                #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
 
       # Current cLusters that cannot be match with previous clusters
       clusterIdMax = np.amax(labels) + 1 #clusterer.labels_.max()
