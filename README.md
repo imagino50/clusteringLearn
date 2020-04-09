@@ -1,6 +1,6 @@
 # Data stream 'Density-based Clustering' in real time   
 
-![alt text](https://github.com/imagino50/clusteringLearn/figure.png   "Home page")
+![alt text](https://github.com/imagino50/clusteringLearn/blob/master/figure.png   "Home page")
 
 ## Project purpose  
 Detect 'density-based clustering' of a continuous (infinite) stream of 'Events'.  
