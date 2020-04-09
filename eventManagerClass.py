@@ -59,30 +59,23 @@ class EventManagerClass:
         #print(clusterer.labels_)
 
         matchingClustersDict = {}
-        if (self.fisrtClustering == False) and (clusterer.labels_[clusterer.labels_ != -1].size > 0 ):
+        if (not self.fisrtClustering): 
           matchingClustersDict = self.matchClusters(clusterer.labels_, clusterer.exemplars_)
           #print(matchingClustersDict)
 
-        if len(matchingClustersDict) > 0:
-          for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
-            event.setClustererProbability(probability)
-            if (label == -1) or (probability < min_proba_cluster):
-              event.setCluster(-1)
-              event.setClusterExemplar(False)
-            else:
+        for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
+          event.setClustererProbability(probability)
+          if (label == -1) or (probability < min_proba_cluster):
+            event.setCluster(-1)
+            event.setClusterExemplar(False)
+          else:
+            if len(matchingClustersDict) > 0:
               clusterId = matchingClustersDict[label]
-              event.setCluster(clusterId)
-              event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
-        elif len(clusterer.labels_ > 0):
-          for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
-            event.setClustererProbability(probability)
-            if (label == -1) or (probability < min_proba_cluster):
-              event.setCluster(-1)
-              event.setClusterExemplar(False)
             else:
-              event.setCluster(label)
-              event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
-
+              clusterId = label
+            event.setCluster(clusterId)
+            event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
+       
         self.fisrtClustering = False
 
 
@@ -92,10 +85,10 @@ class EventManagerClass:
     def matchClusters(self, labels, exemplars):
       matchingClustersDict = {}
       for event, label in zip(self.eventList, labels):
-         isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
-         if (event.clusterId != -1) and (label != -1) and event.clusterExemplar  and isStillExemplar:
-          if event.clusterId not in matchingClustersDict.values():
-            matchingClustersDict[label] = event.clusterId
+         if (event.clusterId != -1) and (label != -1):
+            isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
+            if event.clusterExemplar and isStillExemplar and (event.clusterId not in matchingClustersDict.values()):
+                matchingClustersDict[label] = event.clusterId
             #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
             #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
 
