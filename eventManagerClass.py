@@ -7,8 +7,6 @@ import numpy as np
 import seaborn as sns
 #import scipy.spatial as spatial
 
-
-
 class EventManagerClass:
     # =============================================================================
     # __init__() functions as the class constructor
@@ -95,7 +93,7 @@ class EventManagerClass:
       matchingClustersDict = {}
       for event, label in zip(self.eventList, labels):
          isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
-         if (event.clusterId != -1) and event.clusterExemplar and (label != -1) and isStillExemplar:
+         if (event.clusterId != -1) and (label != -1) and event.clusterExemplar  and isStillExemplar:
           if event.clusterId not in matchingClustersDict.values():
             matchingClustersDict[label] = event.clusterId
             #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
