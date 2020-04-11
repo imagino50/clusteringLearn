@@ -5,7 +5,6 @@ import clustering as Clustering
 # Third party imports
 import numpy as np
 import seaborn as sns
-#import scipy.spatial as spatial
 
 class EventManagerClass:
     # =============================================================================
@@ -14,6 +13,7 @@ class EventManagerClass:
     def __init__(self):
         self.eventList = []
         self.fisrtClustering = True
+        self.previousLabels = []
 
         sns.set_color_codes()
         # https://seaborn.pydata.org/tutorial/color_palettes.html
@@ -56,11 +56,13 @@ class EventManagerClass:
       if (len(self.eventList) > min_cluster_size):
         clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
         #self.printEvents()
+        # Finally each cluster also receives a persistence score giving the stability of the cluster over the range of distance scales present in the data. 
+        # This provides a measure of the relative strength of clusters.
         #print(clusterer.cluster_persistence_ )
 
         matchingClustersDict = {}
         if (not self.fisrtClustering): 
-          matchingClustersDict = self.matchClusters(clusterer.labels_, clusterer.exemplars_)
+          matchingClustersDict = self.matchClusters(clusterer.labels_, clusterer.exemplars_, clusterer.cluster_persistence_)
           #print(matchingClustersDict)
 
         for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
@@ -77,23 +79,36 @@ class EventManagerClass:
             event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
        
         self.fisrtClustering = False
+        self.previousLabels = clusterer.labels_[:]
 
 
   # =============================================================================
   # Clustering Correlation between previous and current clusters
   # =============================================================================
-    def matchClusters(self, labels, exemplars):
+    def matchClusters(self, labels, exemplars, cluster_persistence):
       matchingClustersDict = {}
-      for event, label in zip(self.eventList, labels):
-         if (event.clusterId != -1) and (label != -1):
-            isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
-            if (event.clusterId not in matchingClustersDict.values()) and isStillExemplar and event.clusterExemplar:
-                matchingClustersDict[label] = event.clusterId
+
+      idxClusters = sorted(range(len(cluster_persistence)), key=lambda k: cluster_persistence[k], reverse=True)
+      for idx in idxClusters:
+        for event, label in zip(self.eventList, labels):
+          if (event.clusterId != -1) and (label == idx):
+              isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
+              if (event.clusterId not in matchingClustersDict.values()) and isStillExemplar and event.clusterExemplar:
+                  matchingClustersDict[label] = event.clusterId
                 #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
                 #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
 
+      sizeDict = len(matchingClustersDict) 
+      if (sizeDict< self.previousLabels.max() +1) and (sizeDict < labels.max() +1):
+        for event, label in zip(self.eventList, labels):
+          if (event.clusterId != -1) and (label != -1):
+            if (label not in matchingClustersDict) and (event.clusterId not in matchingClustersDict.values()):
+                matchingClustersDict[label] = event.clusterId
+                print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
+
+
       # Current cLusters that cannot be match with previous clusters
-      clusterIdMax = np.amax(labels) + 1 #clusterer.labels_.max()
+      clusterIdMax = labels.max() +1
       for cluster_id in range(clusterIdMax):
         if cluster_id not in matchingClustersDict:
           i = 0

@@ -51,7 +51,6 @@ slider_Noise_ax = plt.axes([left, 0.15 + spacing, width, 0.02])
 plt.axes(ax_scatter)
 plt.title('Datastream clustering')
 
-#intMin_slider = Slider(slider_IntMin_ax,'Intensity Min',0, 255,valinit=200)
 minProba_slider = Slider(slider_MinProba_ax,'Clustering proba min',0, 1, valinit=min_proba_cluster, valstep=0.1)
 incIntensity_slider = Slider(slider_incIntensity_ax,'Intensity decrease',0, 5, valinit=incIntensity, valstep=0.1)
 noise_slider = Slider(slider_Noise_ax,'Noise Rate',0, 100, valinit=noiseRate, valstep=1)
@@ -67,7 +66,6 @@ def onclick(event):
     if event.inaxes != ax_scatter: return
     #print(u"event.x :", event.xdata  , '  event.y:', event.ydata)
     evtMng.createEvent(event.xdata, event.ydata, centerIntensity)
-
 
 cid = fig.canvas.mpl_connect('button_press_event', onclick)
 
