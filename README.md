@@ -17,9 +17,8 @@ The classification of these 'events' is done accordingly to these 3 conditions :
 3. Show on the Bar Chart the **persistence score** of each cluster.  
 
 ## Definition
-__HDBSCAN__ : Unsupervised learning to find clusters, or dense regions, of a dataset.  
-
-__Persistence score__ : The stability of the cluster over the range of distance scales present in the data. This provides a measure of the relative strength of clusters.
+- HDBSCAN : Unsupervised learning to find clusters, or dense regions, of a dataset.  
+- Persistence score : The stability of the cluster over the range of distance scales present in the data. This provides a measure of the relative strength of clusters.
 
 ## How to run  
 
