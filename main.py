@@ -33,7 +33,7 @@ marginY = 10
 min_cluster_size = 5
 min_proba_cluster = 0
 roundPersistence = 1 # 1 decimale
-lifeTimeFilter = 10 # Cycle de 
+lifeTimeFilter = 10  # Number minimum of lifeTime to display
 
 # Create new Figure
 fig, axes = plt.subplots(figsize=(10, 6))
@@ -58,15 +58,17 @@ ax_bar = fig.add_subplot(spec[0, 1])
 # Sliders Plot for chart settings
 minProba_slider = Slider(fig.add_subplot(spec[3, 0]),'Clustering \nproba min',0, 1, valinit=min_proba_cluster, valstep=0.1)
 minProba_slider.label.set_size(8)
+
 incIntensity_slider = Slider(fig.add_subplot(spec[4, 0]),'Intensity \ndecrease',0, 5, valinit=incIntensity, valstep=0.1)
 incIntensity_slider.label.set_size(8)
+
 noise_slider = Slider(fig.add_subplot(spec[5, 0]),'Noise Rate',0, 100, valinit=noiseRate, valstep=1)
 noise_slider.label.set_size(8)
 
 lifeTimeFilter_slider = Slider(fig.add_subplot(spec[4, 1]),'Life Time \nFilter',0, 100, valinit=lifeTimeFilter, valstep=5)
 lifeTimeFilter_slider.label.set_size(8)
 
-
+# Use to generate event & detect cluster & return data to display
 evtMng = EventManager.EventManagerClass()
 evtGen = EventGenerator.EventGeneratorClass(initialNbClusters, canvasWidth, canvasHeight, marginX, marginY)
 
