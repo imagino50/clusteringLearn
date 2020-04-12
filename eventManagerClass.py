@@ -53,7 +53,7 @@ class EventManagerClass:
 
 
   # =============================================================================
-  # Clustering Events
+  # Cluster Eventsusing HDBSCAN
   # =============================================================================
     def clusterEvents(self, min_cluster_size, min_proba_cluster):
       if (len(self.eventList) > min_cluster_size):
@@ -105,7 +105,7 @@ class EventManagerClass:
 
 
   # =============================================================================*/
-  # Return data to plot
+  # Return data to Scatter events
   # =============================================================================*/
     def getDataToScatter(self, centerIntensity, intensityMin):
         x, y, sizeList = map(list, zip(*((e.x, e.y, e.radius)
@@ -124,7 +124,7 @@ class EventManagerClass:
 
 
   # =============================================================================
-  # Get data to plot
+  # Return data to plot cluster persistence
   # =============================================================================
     def getDataToPlot(self, roundPersistence, lifeTimeFilter):
       IdList, lifeTimeList, persistenceList = self.clusteringWrapper.getDataToPlot(roundPersistence, lifeTimeFilter)

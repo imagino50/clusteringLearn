@@ -70,7 +70,7 @@ class ClusterManagerClass:
 
 
   # =============================================================================*/
-  # Return 
+  # Return data to plot persistence
   # =============================================================================*/
     def getDataToPlot(self, roundPersistence, lifeTimeFilter):
       IdList = []
@@ -85,7 +85,7 @@ class ClusterManagerClass:
 
       return IdList, lifeTimeList, persistenceList
 
- #rounded_persistenceList = [ round(elem, 1) for elem in persistenceList ]
+
   # =============================================================================*/
   # Print 
   # =============================================================================*/

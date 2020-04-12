@@ -16,7 +16,7 @@ class ClusteringWrapperClass:
 
 
     # =============================================================================
-    # Clustering Events
+    # Main function : Cluster Events
     # =============================================================================
     def clusterEvents(self, eventList, min_cluster_size, min_proba_cluster, previousLabelsSize, fisrtClustering):
         clusterer = Clustering.detectCluster(eventList, min_cluster_size)
@@ -31,7 +31,7 @@ class ClusteringWrapperClass:
 
 
     # =============================================================================
-    # Clustering Correlation between previous and current clusters
+    # Compute cluster matching between previous and current clusters
     # =============================================================================
     def detectMatchClusters(self, eventList, labels, exemplars, cluster_persistence, previousLabelsSize):
         matchingClustersDict = {}
@@ -78,7 +78,7 @@ class ClusteringWrapperClass:
 
 
     # =============================================================================
-    # Get data to plot
+    # Get data to plot persistence
     # =============================================================================
     def getDataToPlot(self, roundPersistence, lifeTimeFilter):
         return self.clusterMng.getDataToPlot(roundPersistence, lifeTimeFilter)
