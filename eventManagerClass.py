@@ -1,10 +1,12 @@
 # Module imports
 import eventClass as Event
-import clustering as Clustering
+import clusteringWrapperClass as ClusteringWrapper
+import utils as utils
 
 # Third party imports
 import numpy as np
 import seaborn as sns
+
 
 class EventManagerClass:
     # =============================================================================
@@ -13,7 +15,8 @@ class EventManagerClass:
     def __init__(self):
         self.eventList = []
         self.fisrtClustering = True
-        self.previousLabels = []
+        self.previousLabelsSize = 0
+        self.clusteringWrapper = ClusteringWrapper.ClusteringWrapperClass()
 
         sns.set_color_codes()
         # https://seaborn.pydata.org/tutorial/color_palettes.html
@@ -54,17 +57,14 @@ class EventManagerClass:
   # =============================================================================
     def clusterEvents(self, min_cluster_size, min_proba_cluster):
       if (len(self.eventList) > min_cluster_size):
-        clusterer = Clustering.detectCluster(self.eventList, min_cluster_size)
-        #self.printEvents()
-        # Finally each cluster also receives a persistence score giving the stability of the cluster over the range of distance scales present in the data. 
-        # This provides a measure of the relative strength of clusters.
-        #print(clusterer.cluster_persistence_ )
 
-        matchingClustersDict = {}
-        if (not self.fisrtClustering): 
-          matchingClustersDict = self.matchClusters(clusterer.labels_, clusterer.exemplars_, clusterer.cluster_persistence_)
-          #print(matchingClustersDict)
-
+        clusterer, matchingClustersDict = self.clusteringWrapper.clusterEvents(
+          self.eventList, 
+          min_cluster_size, 
+          min_proba_cluster, 
+          self.previousLabelsSize, 
+          self.fisrtClustering)
+        
         for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
           event.setClustererProbability(probability)
           if (label == -1) or (probability < min_proba_cluster):
@@ -76,55 +76,10 @@ class EventManagerClass:
             else:
               clusterId = label
             event.setCluster(clusterId)
-            event.setClusterExemplar(self.isCoordinatesMatch(event, clusterer.exemplars_[label]))
+            event.setClusterExemplar(utils.isCoordinatesMatch(event, clusterer.exemplars_[label]))
        
         self.fisrtClustering = False
-        self.previousLabels = clusterer.labels_[:]
-
-
-  # =============================================================================
-  # Clustering Correlation between previous and current clusters
-  # =============================================================================
-    def matchClusters(self, labels, exemplars, cluster_persistence):
-      matchingClustersDict = {}
-
-      idxClusters = sorted(range(len(cluster_persistence)), key=lambda k: cluster_persistence[k], reverse=True)
-      for idx in idxClusters:
-        for event, label in zip(self.eventList, labels):
-          if (event.clusterId != -1) and (label == idx):
-              isStillExemplar = self.isCoordinatesMatch(event, exemplars[label])
-              if (event.clusterId not in matchingClustersDict.values()) and isStillExemplar and event.clusterExemplar:
-                  matchingClustersDict[label] = event.clusterId
-                #print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
-                #print(u"FOUND! event.x :", event.x  , '  event.y:', event.y)
-
-      sizeDict = len(matchingClustersDict) 
-      if (sizeDict< self.previousLabels.max() +1) and (sizeDict < labels.max() +1):
-        for event, label in zip(self.eventList, labels):
-          if (event.clusterId != -1) and (label != -1):
-            if (label not in matchingClustersDict) and (event.clusterId not in matchingClustersDict.values()):
-                matchingClustersDict[label] = event.clusterId
-                print(u"FOUND! cur_clusterId:", label , '  prev_clusterId:', event.clusterId)
-
-
-      # Current cLusters that cannot be match with previous clusters
-      clusterIdMax = labels.max() +1
-      for cluster_id in range(clusterIdMax):
-        if cluster_id not in matchingClustersDict:
-          i = 0
-          while i in matchingClustersDict.values():
-            i = i + 1
-          matchingClustersDict[cluster_id] = i
-
-      return matchingClustersDict
-
-
-  # =============================================================================
-  # Return true if the Event coordinates match one of the array of coordinates
-  # =============================================================================
-    def isCoordinatesMatch(self, event, exemplars):
-      coordinates = np.array([event.x, event.y])
-      return any(np.array_equal(exemplar, coordinates) for exemplar in exemplars)
+        self.previousLabelsSize = clusterer.labels_.max() +1
 
 
   # =============================================================================
@@ -150,7 +105,7 @@ class EventManagerClass:
 
 
   # =============================================================================*/
-  # Return EventList
+  # Return data to plot
   # =============================================================================*/
     def getDataToScatter(self, centerIntensity, intensityMin):
         x, y, sizeList = map(list, zip(*((e.x, e.y, e.radius)
@@ -166,6 +121,20 @@ class EventManagerClass:
 
         #cluster_member_colors = [sns.desaturate(x, p) for x, p in zip(cluster_colors, clusterer.probabilities_)]
         return offsetList, sizeList, cluster_colors
+
+
+  # =============================================================================
+  # Get data to plot
+  # =============================================================================
+    def getDataToPlot(self, roundPersistence, lifeTimeFilter):
+      IdList, lifeTimeList, persistenceList = self.clusteringWrapper.getDataToPlot(roundPersistence, lifeTimeFilter)
+      r1 = [self.r[id] for id in IdList]
+      g1 = [self.g[id] for id in IdList]
+      b1 = [self.b[id] for id in IdList]
+      a = [1] * len(IdList)
+      cluster_colors = tuple(zip(r1, g1, b1, a))
+
+      return IdList, lifeTimeList, persistenceList, cluster_colors
 
 
   # =============================================================================*/
