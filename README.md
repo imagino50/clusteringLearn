@@ -13,7 +13,9 @@ The classification of these 'events' is done accordingly to these 3 conditions :
 
 ## Steps Process  
 1. Generates continously 'events' as 2D input : Randomly or from a standard deviation around a moving center. 
-2. Draws and update 'events' according to the density-based clustering 
+2. Scatter 'events' and set color according to the HDBSCAN density-based clustering 
+3. Show on the Bar Chart the persistence score of each cluster
+__Persistence score__ : The stability of the cluster over the range of distance scales present in the data. This provides a measure of the relative strength of clusters.
 
 ## How to run  
 
