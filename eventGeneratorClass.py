@@ -23,16 +23,16 @@ class EventGeneratorClass:
     self.width = canvasWidth - marginX
     self.height = canvasHeight - marginY
     self.clusterCenterList = []
-    self._initClusterCenterList_(initialNbClusters)
+    self.__initClusterCenterList(initialNbClusters)
 
 
   #=============================================================================
   # Init List of center cluster
   #=============================================================================
-  def _initClusterCenterList_(self, initialNbClusters):
+  def __initClusterCenterList(self, initialNbClusters):
     self.clusterCenterList = []
     for _ in range(initialNbClusters):
-      self._addRandomClusterCenter_()
+      self.__addRandomClusterCenter()
       
 
   #=============================================================================
@@ -50,9 +50,9 @@ class EventGeneratorClass:
     centerIntensity
   ): 
     if (generationMode == "Random"):
-      return self._createRandomEvent_(centerIntensity)
+      return self.__createRandomEvent(centerIntensity)
     elif (generationMode == "Cluster"):
-      event = self._generateEvent_(
+      event = self.__generateEvent(
         noiseRate,
         centerIntensity,
         max_x_stdev,
@@ -73,13 +73,13 @@ class EventGeneratorClass:
   #=============================================================================
   # Generate an event either randomly or clustered
   #=============================================================================
-  def _generateEvent_(self, noiseRate, centerIntensity, max_x_stdev, max_y_stdev):
+  def __generateEvent(self, noiseRate, centerIntensity, max_x_stdev, max_y_stdev):
     rand = random.randint(0, 100)
     if (rand < noiseRate):
-      return self._createRandomEvent_(centerIntensity)
+      return self.__createRandomEvent(centerIntensity)
     elif (len(self.clusterCenterList) > 0):
       clusterId = random.randrange(0, len(self.clusterCenterList))
-      return self._createClusteredEvent_(
+      return self.__createClusteredEvent(
         self.clusterCenterList[clusterId],
         centerIntensity,
         max_x_stdev,
@@ -90,7 +90,7 @@ class EventGeneratorClass:
   #=============================================================================
   # Add randomly a cluster center
   #=============================================================================
-  def _addRandomClusterCenter_(self):
+  def __addRandomClusterCenter(self):
     clusterCenter = EventGeneratorClass.ClusterCenter(random.randrange(self.marginX, self.width), random.randrange(self.marginY, self.height))
     self.clusterCenterList.append(clusterCenter)
 
@@ -98,7 +98,7 @@ class EventGeneratorClass:
   #=============================================================================
   # Create Event at ramdom position
   #=============================================================================
-  def _createRandomEvent_(self, centerIntensity):
+  def __createRandomEvent(self, centerIntensity):
     return Event.EventClass(
       # randomly select a number between 0-self.width 
       random.randrange(self.marginX, self.width),
@@ -111,7 +111,7 @@ class EventGeneratorClass:
   #=============================================================================
   # Create an Event clustered
   #=============================================================================
-  def _createClusteredEvent_(self, cluster, centerIntensity, max_x_stdev, max_y_stdev):
+  def __createClusteredEvent(self, cluster, centerIntensity, max_x_stdev, max_y_stdev):
     return Event.EventClass(
       round(np.random.normal(cluster.y, max_y_stdev)), 
       round(np.random.normal(cluster.x, max_x_stdev)), 
@@ -148,7 +148,7 @@ class EventGeneratorClass:
     current_nb_clusters = len(self.clusterCenterList)
     if current_nb_clusters < nb_clusters:
       for _ in range(nb_clusters - current_nb_clusters):
-        self._addRandomClusterCenter_()
+        self.__addRandomClusterCenter()
     elif (current_nb_clusters > nb_clusters):
       for i in range(current_nb_clusters - nb_clusters):
         self.clusterCenterList.pop(i)

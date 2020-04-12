@@ -23,9 +23,9 @@ class ClusteringWrapperClass:
 
         matchingClustersDict = {}
         if (not fisrtClustering): 
-            matchingClustersDict = self.detectMatchClusters(eventList, clusterer.labels_, clusterer.exemplars_, clusterer.cluster_persistence_, previousLabelsSize)
+            matchingClustersDict = self.__detectMatchClusters(eventList, clusterer.labels_, clusterer.exemplars_, clusterer.cluster_persistence_, previousLabelsSize)
             self.clusterMng.removeDeadClusters(matchingClustersDict)
-            matchingClustersDict = self.detectNewClusters(matchingClustersDict, clusterer.labels_.max() + 1, clusterer.exemplars_, clusterer.labels_)
+            matchingClustersDict = self.__detectNewClusters(matchingClustersDict, clusterer.labels_.max() + 1, clusterer.exemplars_, clusterer.labels_)
 
         return clusterer, matchingClustersDict
 
@@ -33,7 +33,7 @@ class ClusteringWrapperClass:
     # =============================================================================
     # Compute cluster matching between previous and current clusters
     # =============================================================================
-    def detectMatchClusters(self, eventList, labels, exemplars, cluster_persistence, previousLabelsSize):
+    def __detectMatchClusters(self, eventList, labels, exemplars, cluster_persistence, previousLabelsSize):
         matchingClustersDict = {}
 
         idxClusters = sorted(range(len(cluster_persistence)), key=lambda k: cluster_persistence[k], reverse=True)
@@ -63,7 +63,7 @@ class ClusteringWrapperClass:
     # =============================================================================
     # Compute current clusters that cannot be match with previous clusters
     # =============================================================================
-    def detectNewClusters(self, matchingClustersDict, clusterIdMax,  exemplars, cluster_persistence):
+    def __detectNewClusters(self, matchingClustersDict, clusterIdMax,  exemplars, cluster_persistence):
         for clusterId in range(clusterIdMax):
             if clusterId not in matchingClustersDict:
                 i = 0
