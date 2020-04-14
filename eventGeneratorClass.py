@@ -3,16 +3,27 @@ import eventClass as Event
 
 # Third party imports
 import numpy as np
+from sklearn import datasets
+from sklearn import preprocessing
+import pandas as pd
 import random
 
 # Fixing random state for reproducibility
 #np.random.seed(19680801)
 
 class EventGeneratorClass:
+
+  # =============================================================================
+  # Cluster center inner class
+  # =============================================================================
   class ClusterCenter:
+        # =============================================================================
+        # __init__() functions as the class constructor
+        # =============================================================================
         def __init__(self, x,y ):
             self.x = x
             self.y = y
+
 
 # =============================================================================
 # __init__() functions as the class constructor
@@ -24,6 +35,8 @@ class EventGeneratorClass:
     self.height = canvasHeight - marginY
     self.clusterCenterList = []
     self.__initClusterCenterList(initialNbClusters)
+    self.irisDataset = self.__initDataset()
+    self.irisIndex = 0
 
 
   #=============================================================================
@@ -34,6 +47,24 @@ class EventGeneratorClass:
     for _ in range(initialNbClusters):
       self.__addRandomClusterCenter()
       
+    
+  #=============================================================================
+  # Init Iris dataset
+  #=============================================================================
+  def __initDataset(self):
+    # load_wine([return_X_y])
+    # load_breast_cancer([return_X_y])
+    # load_digits([n_class, return_X_y])
+    dataBunch = datasets.load_iris(return_X_y=False)
+    min_max_scaler = preprocessing.MinMaxScaler(feature_range=(0, self.width + self.marginX))
+    data_scaled = min_max_scaler.fit_transform(dataBunch.data)
+    #df = pd.DataFrame(data_scaled, columns=['Sepal_Length','Sepal_width','Petal_Length','Petal_width']).round()
+    df = pd.DataFrame(data_scaled, columns=dataBunch.feature_names).round()
+    df = df.sample(frac=1).reset_index(drop=True)
+    print(dataBunch.feature_names)
+    print(df)
+    return df
+
 
   #=============================================================================
   # Main function : Add an event as noise or related to a cluster
@@ -50,7 +81,9 @@ class EventGeneratorClass:
     centerIntensity
   ): 
     if (generationMode == "Random"):
-      return self.__createRandomEvent(centerIntensity)
+      event = self.__createRandomEvent(centerIntensity)
+    elif (generationMode == "Iris"):
+      event = self.__createIrisEvent(centerIntensity)
     elif (generationMode == "Cluster"):
       event = self.__generateEvent(
         noiseRate,
@@ -64,14 +97,27 @@ class EventGeneratorClass:
         max_centerY_stdev
       )
 
-      #self.updateNumberClusters(nb_clusters)
-      #print(event.x)
-      #print(event.y)
+    #print(event.x)
+    #print(event.y)
+    return event
+
+
+  #=============================================================================
+  # Create an event from Iris dataset
+  #=============================================================================
+  def __createIrisEvent(self, centerIntensity):
+      event = Event.EventClass(self.irisDataset.at[self.irisIndex,'sepal length (cm)'], self.irisDataset.at[self.irisIndex,'sepal width (cm)'], centerIntensity)
+      if self.irisIndex < len(self.irisDataset.index)-1:
+        self.irisIndex += 1
+      else: 
+        self.irisDataset = self.irisDataset.sample(frac=1).reset_index(drop=True)
+        self.irisIndex = 0
+
       return event
 
 
   #=============================================================================
-  # Generate an event either randomly or clustered
+  # Generate a either clustered event or a random event according to the noise ratio
   #=============================================================================
   def __generateEvent(self, noiseRate, centerIntensity, max_x_stdev, max_y_stdev):
     rand = random.randint(0, 100)

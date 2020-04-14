@@ -11,7 +11,7 @@ import matplotlib.gridspec as gridspec
 
 
 # Settings
-generationMode = "Cluster" #"Random" 
+generationMode = "Iris" #"Cluster" #"Random" 
 nb_clusters = 1
 noiseRate = 10
 max_x_stdev = 2

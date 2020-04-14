@@ -5,7 +5,9 @@ import hdbscan
 import pandas as pd
 #import time
 
-
+# =============================================================================
+# Launch HDBSCAN clustering
+# =============================================================================
 def detectCluster(eventList, min_cluster_size):
 
     # Build Input coordinates
@@ -22,12 +24,26 @@ def detectCluster(eventList, min_cluster_size):
     clusterer =  hdbscan.HDBSCAN(min_cluster_size=min_cluster_size, prediction_data=True).fit(inputDataFrame)
     #hdb_elapsed_time = time.time() - hdb_t1
     #print('Elapsed time to cluster: %.4f s' % hdb_elapsed_time)
+
+    #if clusterer.labels_.max() > 0:
+    #    print("clusterer.cluster_persistence_:")
+    #    print(clusterer.cluster_persistence_ )
+    #    print("hdbscan.validity.validity_index:")
+    #    print(hdbscan.validity.validity_index(inputDataFrame.to_numpy(), clusterer.labels_, per_cluster_scores=True))
+
     return clusterer 
 
+
+# =============================================================================
+# Launch HDBSCAN prediction
+# =============================================================================
 def predict(hdb, test_points):
 	test_labels, strengths = hdbscan.approximate_predict(hdb, test_points)
 	return test_labels, strengths
 
+# =============================================================================
+# Print HDBSCAN data
+# =============================================================================
 def printHDBSCAN(inputDataFrame, clusterer):
     # Number of clusters in labels, ignoring noise if present.
     n_clusters_hdb = len(set(clusterer.labels_)) - (1 if -1 in clusterer.labels_ else 0)
