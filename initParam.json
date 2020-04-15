@@ -1,0 +1,25 @@
+{
+    "generationMode": "Iris",
+    "nb_clusters": 1,
+    "noiseRate": 5,
+    "max_x_stdev": 2,
+    "max_y_stdev": 2,
+    "max_centerX_stdev": 2,
+    "max_centerY_stdev": 2,
+    "centerIntensity": 100,
+
+    "incRadius": 4,
+    "incIntensity": 1,
+    "intensityMin": 20,
+
+    "initialNbClusters": 3,
+    "canvasWidth": 100,
+    "canvasHeight": 100,
+    "marginX": 10,
+    "marginY": 10,
+
+    "min_cluster_size": 3,
+    "min_proba_cluster": 100,
+    "roundPersistence": 100,
+    "lifeTimeFilter": 10
+}

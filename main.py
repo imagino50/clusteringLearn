@@ -4,36 +4,41 @@ import eventGeneratorClass as EventGenerator
 
 # Third party imports
 import numpy as np
+import json
 from matplotlib import pyplot as plt
 from matplotlib.animation import FuncAnimation
 from matplotlib.widgets import Slider
 import matplotlib.gridspec as gridspec
 
 
+
+with open("initParam.json", "r") as read_file:
+    defaultParams = json.load(read_file)
+
 # Settings
-generationMode = "Iris" #"Cluster" #"Random" 
-nb_clusters = 1
-noiseRate = 10
-max_x_stdev = 2
-max_y_stdev = 2
-max_centerX_stdev = 2
-max_centerY_stdev = 2
-centerIntensity = 100
+generationMode = defaultParams["generationMode"]
+nb_clusters = defaultParams["nb_clusters"]
+noiseRate = defaultParams["noiseRate"]
+max_x_stdev = defaultParams["max_x_stdev"]
+max_y_stdev = defaultParams["max_y_stdev"]
+max_centerX_stdev = defaultParams["max_centerX_stdev"]
+max_centerY_stdev = defaultParams["max_centerY_stdev"]
+centerIntensity = defaultParams["centerIntensity"]
 
-incRadius = 4
-incIntensity = 1
-intensityMin = 20
+incRadius = defaultParams["incRadius"]
+incIntensity = defaultParams["incIntensity"]
+intensityMin = defaultParams["intensityMin"]
 
-initialNbClusters = 3
-canvasWidth = 100
-canvasHeight = 100
-marginX = 10
-marginY = 10
+initialNbClusters = defaultParams["initialNbClusters"]
+canvasWidth = defaultParams["canvasWidth"]
+canvasHeight = defaultParams["canvasHeight"]
+marginX = defaultParams["marginX"]
+marginY = defaultParams["marginY"]
 
-min_cluster_size = 5
-min_proba_cluster = 0
-roundPersistence = 1 # 1 decimale
-lifeTimeFilter = 10  # Number minimum of lifeTime to display
+min_cluster_size = defaultParams["min_cluster_size"]
+min_proba_cluster = defaultParams["min_proba_cluster"]
+roundPersistence = defaultParams["roundPersistence"] # 1 decimale
+lifeTimeFilter = defaultParams["lifeTimeFilter"]  # Number minimum of lifeTime to display
 
 # Create new Figure
 fig, axes = plt.subplots(figsize=(10, 6))

@@ -20,7 +20,7 @@ class EventManagerClass:
 
         sns.set_color_codes()
         # https://seaborn.pydata.org/tutorial/color_palettes.html
-        color_palette = sns.color_palette('bright') #deep
+        color_palette = sns.color_palette('bright') + sns.color_palette('deep') + sns.color_palette('dark')
         self.r =  [x[0] for x in color_palette]
         self.g =  [x[1] for x in color_palette]
         self.b =  [x[2] for x in color_palette]
