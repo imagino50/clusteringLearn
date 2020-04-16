@@ -18,8 +18,8 @@
     "marginX": 10,
     "marginY": 10,
 
-    "min_cluster_size": 3,
-    "min_proba_cluster": 100,
-    "roundPersistence": 100,
+    "min_cluster_size": 5,
+    "min_proba_cluster": 0,
+    "roundPersistence": 1,
     "lifeTimeFilter": 10
 }
