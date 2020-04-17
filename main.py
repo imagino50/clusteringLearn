@@ -61,16 +61,16 @@ scat = ax_scatter.scatter(x=[], y=[], s=[], lw=0.5, edgecolors=(0,0,0,1), faceco
 ax_bar = fig.add_subplot(spec[0, 1])
 
 # Sliders Plot for chart settings
-minProba_slider = Slider(fig.add_subplot(spec[3, 0]),'Clustering \nproba min',0, 1, valinit=min_proba_cluster, valstep=0.1)
-minProba_slider.label.set_size(8)
+#minProba_slider = Slider(fig.add_subplot(spec[3, 0]),'Clustering \nproba min',0, 1, valinit=min_proba_cluster, valstep=0.1)
+#minProba_slider.label.set_size(8)
 
-incIntensity_slider = Slider(fig.add_subplot(spec[4, 0]),'Intensity \ndecrease',0, 5, valinit=incIntensity, valstep=0.1)
+incIntensity_slider = Slider(fig.add_subplot(spec[3, 0]),'Intensity \ndecrease',0, 5, valinit=incIntensity, valstep=0.1)
 incIntensity_slider.label.set_size(8)
 
-noise_slider = Slider(fig.add_subplot(spec[5, 0]),'Noise Rate',0, 100, valinit=noiseRate, valstep=1)
+noise_slider = Slider(fig.add_subplot(spec[4, 0]),'Noise Rate',0, 100, valinit=noiseRate, valstep=1)
 noise_slider.label.set_size(8)
 
-lifeTimeFilter_slider = Slider(fig.add_subplot(spec[4, 1]),'Life Time \nFilter',0, 100, valinit=lifeTimeFilter, valstep=5)
+lifeTimeFilter_slider = Slider(fig.add_subplot(spec[3, 1]),'Life Time \nFilter',0, 100, valinit=lifeTimeFilter, valstep=5)
 lifeTimeFilter_slider.label.set_size(8)
 
 # Use to generate event & detect cluster & return data to display
@@ -99,7 +99,7 @@ def update(frame_number):
     evtMng.addEvent(event)
     evtMng.updateEventsShape(incRadius, incIntensity_slider.val) 
     evtMng.removeWeakEvents(intensityMin)
-    evtMng.clusterEvents(min_cluster_size, minProba_slider.val)
+    evtMng.clusterEvents(min_cluster_size)
 
     offsetList, sizeList, colorList = evtMng.getDataToScatter(centerIntensity, intensityMin)
 

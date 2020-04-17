@@ -18,7 +18,7 @@ class ClusteringWrapperClass:
     # =============================================================================
     # Main function : Cluster Events
     # =============================================================================
-    def clusterEvents(self, eventList, min_cluster_size, min_proba_cluster, previousLabelsSize, fisrtClustering):
+    def clusterEvents(self, eventList, min_cluster_size, previousLabelsSize, fisrtClustering):
         clusterer = Clustering.detectCluster(eventList, min_cluster_size)
 
         matchingClustersDict = {}

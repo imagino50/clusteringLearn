@@ -55,19 +55,18 @@ class EventManagerClass:
   # =============================================================================
   # Cluster Eventsusing HDBSCAN
   # =============================================================================
-    def clusterEvents(self, min_cluster_size, min_proba_cluster):
+    def clusterEvents(self, min_cluster_size):
       if (len(self.eventList) > min_cluster_size):
 
         clusterer, matchingClustersDict = self.clusteringWrapper.clusterEvents(
           self.eventList, 
-          min_cluster_size, 
-          min_proba_cluster, 
+          min_cluster_size,  
           self.previousLabelsSize, 
           self.fisrtClustering)
         
         for event, label, probability in zip(self.eventList, clusterer.labels_, clusterer.probabilities_):
           event.setClustererProbability(probability)
-          if (label == -1) or (probability < min_proba_cluster):
+          if label == -1:
             event.setCluster(-1)
             event.setClusterExemplar(False)
           else:
